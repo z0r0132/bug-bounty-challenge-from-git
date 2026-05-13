@@ -1,1 +1,54 @@
-{}
+{
+  "logout": "Abmelden",
+  "appTitle": "Supplier OS-Anwendung",
+  "routes": {
+    "/": "Start",
+    "/home": "Bug-Bounty-Herausforderung"
+  },
+  "accessDenied": {
+    "title": "Zugriff verweigert",
+    "message": "Bitte wenden Sie sich an Ihren Administrator."
+  },
+  "common": {
+    "loading": "Wird geladen…",
+    "notFound": "Nicht gefunden"
+  },
+  "language": {
+    "en": "EN",
+    "de": "DE",
+    "ariaLabel": "Sprache der Oberfläche"
+  },
+  "avatarMenu": {
+    "editProfile": "Profil bearbeiten",
+    "editOrganization": "Organisation bearbeiten",
+    "dataPrivacy": "Datenschutzerklärung",
+    "imprint": "Impressum"
+  },
+  "home": {
+    "welcome": "Willkommen!",
+    "intro": "Dies ist eine Demo-Anwendung mit einigen Macken und Fehlern, in der wir hoffen, dass Sie sie finden. 😃 Hier die Liste der <b>bekannten</b> Probleme:",
+    "sidenote": "Alle Bugs haben ein unterschiedliches Schwierigkeitsniveau und sind allesamt ziemlich typisch (Alltagsprobleme für React-Entwickler). Um alle offenen Punkte zu lösen, sind unterschiedliche Fähigkeiten gefragt: googeln, Erfahrung, das Lesen von Dokumentation und Fehlermeldungen, Kreativität und analytisches Denken.",
+    "issues": {
+      "issue_1": {
+        "title": "Konsolenfehler: Warning: Each child in a list should have a unique \"key\" prop.",
+        "description": "Wir hoffen, Sie finden die Ursache dieses Fehlers – er kann sehr nerven."
+      },
+      "issue_2": {
+        "title": "Das Wort „known“ soll in der Einleitung fett dargestellt werden.",
+        "description": "Bitte ändern Sie beim Umsetzen nicht den i18n-Text."
+      },
+      "issue_3": {
+        "title": "Nutzer-Avatar in der App-Leiste fehlt, obwohl der Nutzer beim Start korrekt geladen werden soll.",
+        "description": "Beim Start laden wir das aktuelle Nutzer-Objekt über einen MobX-Store, aber der Avatar erscheint nicht rechts oben in der Leiste. Achtung: Beim Beheben können Sie auf einen zweiten Bug stoßen."
+      },
+      "issue_4": {
+        "title": "Optional: Countdown verhält sich manchmal falsch (schwer reproduzierbar).",
+        "description": "Einige Entwickler berichteten, dass sich der Countdown in der Kopfleiste gelegentlich seltsam verhält, konnten das aber nicht zuverlässig reproduzieren – vielleicht finden Sie die Ursache."
+      },
+      "issue_5": {
+        "title": "Optional: Sprachumschaltung wäre hilfreich.",
+        "description": "Bitte fügen Sie in der App-Leiste eine Sprachauswahl hinzu, um zwischen Englisch und Deutsch zu wechseln."
+      }
+    }
+  }
+}

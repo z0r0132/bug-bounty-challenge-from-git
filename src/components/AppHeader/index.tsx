@@ -1,4 +1,12 @@
-import { Grow, Box, Theme, Toolbar, Typography } from "@mui/material";
+import {
+  Box,
+  Grow,
+  Theme,
+  ToggleButton,
+  ToggleButtonGroup,
+  Toolbar,
+  Typography
+} from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { styled, useTheme } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
@@ -31,31 +39,60 @@ const AppBar = styled(MuiAppBar)<AppBarProps>(({ theme }) => ({
 
 const AppHeader = React.forwardRef((props: AppHeaderProps, ref) => {
   const { user, pageTitle } = props;
-  const { t } = useTranslation("app");
+  const { t, i18n } = useTranslation("app");
+  const currentLang = i18n.language?.startsWith("de") ? "de" : "en";
   const theme = useTheme();
 
   const [count, setCount] = useState(0);
   const hours = 1;
   const minutes = hours * 60;
   const seconds = minutes * 60;
-  const countdown = seconds - count;
-  const countdownMinutes = `${~~(countdown / 60)}`.padStart(2, "0");
-  const countdownSeconds = (countdown % 60).toFixed(0).padStart(2, "0");
+  const countdown = Math.max(0, seconds - count);
+  const countdownMinutes = String(Math.floor(countdown / 60)).padStart(2, "0");
+  const countdownSeconds = String(countdown % 60).padStart(2, "0");
 
   useEffect(() => {
-    setInterval(() => {
+    const intervalId = window.setInterval(() => {
       setCount((c) => c + 1);
     }, 1000);
+    return () => window.clearInterval(intervalId);
   }, []);
 
   return (
     <AppBar ref={ref} position="fixed" sx={{ width: "100vw" }}>
       <Toolbar sx={{ background: "#08140C 0% 0% no-repeat padding-box" }}>
         <Box sx={{ width: "100%", flexDirection: "row", display: "flex" }}>
-          <Box>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Typography variant="h6" component="div" color="primary">
               {countdownMinutes}:{countdownSeconds}
             </Typography>
+            <ToggleButtonGroup
+              exclusive
+              size="small"
+              value={currentLang}
+              onChange={(_, value: string | null) => {
+                if (value) i18n.changeLanguage(value);
+              }}
+              aria-label={t("language.ariaLabel")}
+              sx={{
+                "& .MuiToggleButton-root": {
+                  color: "common.white",
+                  borderColor: "rgba(255,255,255,0.35)",
+                  py: 0.25,
+                  px: 1,
+                  minWidth: 40
+                },
+                "& .MuiToggleButton-root.Mui-selected": {
+                  bgcolor: "primary.main",
+                  color: "common.black",
+                  borderColor: "primary.main",
+                  "&:hover": { bgcolor: "primary.light" }
+                }
+              }}
+            >
+              <ToggleButton value="en">{t("language.en")}</ToggleButton>
+              <ToggleButton value="de">{t("language.de")}</ToggleButton>
+            </ToggleButtonGroup>
           </Box>
           <Box sx={{ width: 20, height: 20, flex: 1 }} />
           <Box sx={{ flex: 2 }}>
@@ -82,7 +119,9 @@ const AppHeader = React.forwardRef((props: AppHeaderProps, ref) => {
           <Box sx={{ flex: 1, justifyContent: "flex-end", display: "flex" }}>
             {user && user.eMail && (
               <Grow in={Boolean(user && user.eMail)}>
-                <AvatarMenu user={user} />
+                <Box sx={{ display: "flex" }}>
+                  <AvatarMenu user={user} />
+                </Box>
               </Grow>
             )}
           </Box>

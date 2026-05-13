@@ -1,5 +1,6 @@
 import { Box, Fade, Grow, Slide } from "@mui/material";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { matchPath, Route, Switch, useLocation } from "react-router-dom";
 import { PathParams, TRoute } from "../types/global";
 import { validateParams } from "../utils/router";
@@ -28,6 +29,7 @@ const useMatchedRoute = (
 } => {
   const { notFoundComponent, matchOnSubPath, transition = "fade" } =
     options || {};
+  const { t } = useTranslation("app");
   const location = useLocation();
   // `exact`, `sensitive` and `strict` options are set to true
   // to ensure type safety.
@@ -46,7 +48,7 @@ const useMatchedRoute = (
   const [firstResult] = results;
   const { match, route } = firstResult || {};
   const Fallback = fallbackComponent;
-  const NotFound = notFoundComponent || (() => <>not found</>);
+  const NotFound = notFoundComponent || (() => <>{t("common.notFound")}</>);
 
   const Transition: React.FC<{ match: any }> = React.useMemo(() => {
     if (transition === "fade") {

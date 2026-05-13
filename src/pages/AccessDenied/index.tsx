@@ -30,8 +30,6 @@ const AccessDenied: React.FC = () => {
     // eslint-disable-next-line
   }, []);
 
-  // TODO: aldd all i18n texts to locales and refactor file
-
   const handleLogout = () => {};
 
   return (
@@ -39,9 +37,9 @@ const AccessDenied: React.FC = () => {
       <Container>
         <Icon size={2} color={color} path={mdiAlert} />
         <Typography variant="h5" sx={{ color }}>
-          {t("AccessDenied")}
+          {t("accessDenied.title")}
         </Typography>
-        <Typography>{t("speakToYourAdmin")}</Typography>
+        <Typography>{t("accessDenied.message")}</Typography>
         <Button sx={{ color }} onClick={handleLogout}>
           {t("logout")}
         </Button>

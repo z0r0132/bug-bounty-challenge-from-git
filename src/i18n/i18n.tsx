@@ -21,6 +21,17 @@ const getBrowserLanguage = () => {
 
 const browserLanguage = getBrowserLanguage();
 
+const resolveInitialLanguage = (): string => {
+  if (typeof window === "undefined") {
+    return FALLBACK_LANGUAGE;
+  }
+  const saved = window.localStorage.getItem("i18nextLng");
+  if (saved === "de" || saved === "en") {
+    return saved;
+  }
+  return browserLanguage === "de" ? "de" : FALLBACK_LANGUAGE;
+};
+
 export const defaultTranslationModules = [
   { locale: "de", texts: de },
   { locale: "en", texts: en }
@@ -43,7 +54,7 @@ i18n
     resources,
     ns: ["common", "app"],
     defaultNS: "app",
-    lng: FALLBACK_LANGUAGE || browserLanguage,
+    lng: resolveInitialLanguage(),
     fallbackLng: FALLBACK_LANGUAGE,
     interpolation: {
       escapeValue: false // not needed for react as it escapes by default

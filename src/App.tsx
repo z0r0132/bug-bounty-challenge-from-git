@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
 import { SnackbarProvider } from "notistack";
+import { useTranslation } from "react-i18next";
 
 import { HashRouter } from "react-router-dom";
 
@@ -30,13 +31,18 @@ const CombinedStoreProvider: React.FC<{}> = ({ children }) => {
   return <UserStoreProvider>{children}</UserStoreProvider>;
 };
 
+const AppSuspenseFallback: React.FC = () => {
+  const { t } = useTranslation("app");
+  return <div>{t("common.loading")}</div>;
+};
+
 const AppContainer = () => {
   return (
     <>
       <CssBaseline />
       {/* Kickstart a simple scoped CSS baseline to build upon. */}
       {/* Required to override Material-UI's styles via CSS modules. */}
-      <Suspense fallback={<div>loading...</div>}>
+      <Suspense fallback={<AppSuspenseFallback />}>
         <CombinedStoreProvider>
           <SnackbarProvider
             maxSnack={3}
