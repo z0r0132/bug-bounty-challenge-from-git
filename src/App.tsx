@@ -4,8 +4,6 @@ import { useTranslation } from "react-i18next";
 
 import { HashRouter } from "react-router-dom";
 
-import services from "./api/services";
-
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import StylesProvider from "@mui/styles/StylesProvider";

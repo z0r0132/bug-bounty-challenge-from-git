@@ -3,7 +3,7 @@ import { merge } from "lodash";
 import { createTheme } from "@mui/material/styles";
 
 // import MaterialDesignIcons from "!!url-loader!@mdi/font/fonts/materialdesignicons-webfont.woff2"
-import tokens, { fonts, OsapiensThemeTokens } from "./tokens";
+import tokens, { fonts } from "./tokens";
 
 // TODO: override styles of all anchor elements
 // a,
@@ -13,23 +13,6 @@ import tokens, { fonts, OsapiensThemeTokens } from "./tokens";
 // a:visited {
 //   color: adjust-color($color: $primary, $lightness: -20%);
 // }
-
-declare module "@mui/material/styles" {
-  interface Theme {
-    tokens: OsapiensThemeTokens;
-  }
-  interface BreakpointOverrides {
-    xs: true;
-    sm: true;
-    md: true;
-    lg: true;
-    xl: true;
-    mobile: true;
-    tablet: true;
-    laptop: true;
-    desktop: true;
-  }
-}
 
 const commonTheme = {
   palette: {

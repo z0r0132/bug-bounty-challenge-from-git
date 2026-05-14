@@ -37,28 +37,32 @@ const AppBar = styled(MuiAppBar)<AppBarProps>(({ theme }) => ({
   height: theme.tokens.header.height
 }));
 
-const AppHeader = React.forwardRef((props: AppHeaderProps, ref) => {
-  const { user, pageTitle } = props;
-  const { t, i18n } = useTranslation("app");
-  const currentLang = i18n.language?.startsWith("de") ? "de" : "en";
-  const theme = useTheme();
+const AppHeader = React.forwardRef<HTMLDivElement, AppHeaderProps>(
+  (props, ref) => {
+    const { user, pageTitle } = props;
+    const { t, i18n } = useTranslation("app");
+    const currentLang = i18n.language?.startsWith("de") ? "de" : "en";
+    const theme = useTheme();
 
-  const [count, setCount] = useState(0);
-  const hours = 1;
-  const minutes = hours * 60;
-  const seconds = minutes * 60;
-  const countdown = Math.max(0, seconds - count);
-  const countdownMinutes = String(Math.floor(countdown / 60)).padStart(2, "0");
-  const countdownSeconds = String(countdown % 60).padStart(2, "0");
+    const [count, setCount] = useState(0);
+    const hours = 1;
+    const minutes = hours * 60;
+    const seconds = minutes * 60;
+    const countdown = Math.max(0, seconds - count);
+    const countdownMinutes = String(Math.floor(countdown / 60)).padStart(
+      2,
+      "0"
+    );
+    const countdownSeconds = String(countdown % 60).padStart(2, "0");
 
-  useEffect(() => {
-    const intervalId = window.setInterval(() => {
-      setCount((c) => c + 1);
-    }, 1000);
-    return () => window.clearInterval(intervalId);
-  }, []);
+    useEffect(() => {
+      const intervalId = window.setInterval(() => {
+        setCount((c) => c + 1);
+      }, 1000);
+      return () => window.clearInterval(intervalId);
+    }, []);
 
-  return (
+    return (
     <AppBar ref={ref} position="fixed" sx={{ width: "100vw" }}>
       <Toolbar sx={{ background: "#08140C 0% 0% no-repeat padding-box" }}>
         <Box sx={{ width: "100%", flexDirection: "row", display: "flex" }}>

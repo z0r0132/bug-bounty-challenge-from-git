@@ -12,10 +12,12 @@ export interface Language {
   icon: JSX.Element;
 }
 
-const getBrowserLanguage = () => {
-  // @ts-ignore
-  const userLang = navigator.language || navigator.userLanguage;
-
+const getBrowserLanguage = (): string => {
+  if (typeof navigator === "undefined") {
+    return FALLBACK_LANGUAGE;
+  }
+  const extended = navigator as Navigator & { userLanguage?: string };
+  const userLang = navigator.language || extended.userLanguage;
   return userLang ? userLang.split("-")[0] : FALLBACK_LANGUAGE;
 };
 

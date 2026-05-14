@@ -1,9 +1,9 @@
 import { PathParams } from "../types/global";
 
-export const validateParams = <ERoute extends string>(
+export function validateParams<ERoute extends string>(
   path: ERoute,
   params: unknown
-): params is PathParams => {
+): params is PathParams {
   if (!(params instanceof Object)) return false;
 
   const paramSet = new Set(Object.keys(params));
@@ -19,7 +19,7 @@ export const validateParams = <ERoute extends string>(
   }
 
   return true;
-};
+}
 
 // build a valid url with the path and its parameters
 export const buildUrl = <ERoute extends string>(

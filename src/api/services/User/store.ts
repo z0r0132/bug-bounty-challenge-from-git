@@ -4,7 +4,7 @@ import {
   ActionResultStatus,
   ActionSuccess
 } from "../../../types/global";
-import { resultOrError, ResultOrErrorResponse } from "../../../utils/global";
+import { resultOrError } from "../../../utils/global";
 
 export interface User {
   firstName?: string;
@@ -22,8 +22,8 @@ export default class UserStore {
 
   // actions
   async getOwnUser() {
-    const [result, error] = (await resultOrError(
-      new Promise((resolve) =>
+    const settled = await resultOrError(
+      new Promise<User>((resolve) =>
         setTimeout(
           () =>
             resolve({
@@ -34,7 +34,8 @@ export default class UserStore {
           500
         )
       )
-    )) as ResultOrErrorResponse<User>;
+    );
+    const [result, error] = settled as [User | null, unknown];
 
     if (!!error) {
       return {

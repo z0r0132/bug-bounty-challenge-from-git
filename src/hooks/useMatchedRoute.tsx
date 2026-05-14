@@ -1,7 +1,13 @@
-import { Box, Fade, Grow, Slide } from "@mui/material";
+import { Box, Fade, Grow, Slide, SlideProps } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { matchPath, Route, Switch, useLocation } from "react-router-dom";
+import {
+  matchPath,
+  Route,
+  RouteChildrenProps,
+  Switch,
+  useLocation
+} from "react-router-dom";
 import { PathParams, TRoute } from "../types/global";
 import { validateParams } from "../utils/router";
 
@@ -79,13 +85,14 @@ const useMatchedRoute = (
 
     if (transition.startsWith("slide")) {
       const [, direction] = transition.split("-");
+      const slideDirection = direction as SlideProps["direction"];
       const SlideTransition: React.FC<{ match: any }> = ({
         children,
         match
       }) => (
         <Slide
           in={match ? true : false}
-          direction={direction as "left" | "right" | "up" | "down"}
+          direction={slideDirection}
           timeout={300}
           unmountOnExit
         >
@@ -95,7 +102,10 @@ const useMatchedRoute = (
 
       return SlideTransition;
     }
-    return (({ children }) => children) as React.FC<{ match: any }>;
+    const Passthrough: React.FC<{ match: any; children?: React.ReactNode }> = ({
+      children
+    }) => <>{children}</>;
+    return Passthrough;
   }, [transition]);
 
   return {
@@ -110,7 +120,7 @@ const useMatchedRoute = (
               key={path + "matchOnSubPath"}
               path={`/${path.split("/").slice(1, 2)}/*`}
             >
-              {({ match }) => (
+              {({ match }: RouteChildrenProps) => (
                 <Transition match={match}>
                   <RouteComponent />
                 </Transition>
@@ -119,7 +129,7 @@ const useMatchedRoute = (
           ))}
         {routes.map(({ path, Component: RouteComponent }, i) => (
           <Route key={path + "root"} sensitive strict exact path={path}>
-            {({ match }) => (
+            {({ match }: RouteChildrenProps) => (
               <Transition match={match}>
                 <RouteComponent />
               </Transition>

@@ -6,14 +6,14 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { useTranslation, Trans } from "react-i18next";
 
-const ISSUE_KEYS = [
+const ISSUE_KEYS: string[] = [
   "issue_1",
   "issue_2",
   "issue_3",
   "issue_4",
   "issue_5"
-] as const;
-const ISSUE_ICONS = ["🐞", "🐞", "🐞", "🐞", "⭐️"] as const;
+];
+const ISSUE_ICONS: string[] = ["🐞", "🐞", "🐞", "🐞", "⭐️"];
 
 const Home = () => {
   const { t } = useTranslation("app");

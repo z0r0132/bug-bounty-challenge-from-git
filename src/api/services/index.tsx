@@ -1,16 +1,10 @@
+import React from "react";
 import User from "./User";
 
-const requireAllServices = (ctx: any): React.FC<any>[] => {
-  const keys = ctx.keys();
-  const modules = keys.map(ctx);
-
-  return keys.map((key: string, index: number) => modules[index].StoreProvider);
-};
-
-const getAllServices = (): React.FC<any>[] => {
-  // return requireAllServices(
-  //   require.context("api/services/", true, /index\.tsx$/)
-  // );
+const getAllServices = (): { StoreProvider: React.FC }[] => {
+  // Example dynamic registration (webpack):
+  // const ctx = require.context("./", true, /index\.tsx$/);
+  // return ctx.keys().map((key) => ctx(key).StoreProvider);
   return [User];
 };
 
