@@ -22,6 +22,12 @@ export const StoreProvider: React.FC = (props) => {
 HOOK DEFINITION
 */
 
-export const useUserStore = () => useContext(UserStoreContext);
+export const useUserStore = (): Store => {
+  const store = useContext(UserStoreContext);
+  if (store == null) {
+    throw new Error("useUserStore must be used within StoreProvider");
+  }
+  return store;
+};
 
 export default { StoreProvider };

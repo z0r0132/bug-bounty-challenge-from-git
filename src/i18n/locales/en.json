@@ -3,7 +3,8 @@
   "appTitle": "Supplier OS Application",
   "routes": {
     "/": "Home",
-    "/home": "Bug Bounty Challenge"
+    "/home": "Bug Bounty Challenge",
+    "/login": "Sign in"
   },
   "accessDenied": {
     "title": "Access Denied",
@@ -11,14 +12,48 @@
   },
   "common": {
     "loading": "Loading…",
-    "notFound": "Not found"
+    "notFound": "Not found",
+    "retry": "Retry",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "saved": "Saved locally (demo only)."
   },
   "language": {
     "en": "EN",
     "de": "DE",
     "ariaLabel": "Interface language"
   },
+  "login": {
+    "title": "Sign in",
+    "subtitle": "Mock authentication: enter any non-empty email and password. Data stays in this browser only.",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Continue",
+    "errorEmpty": "Please enter both email and password."
+  },
+  "challenge": {
+    "ended": "Challenge ended",
+    "menuDisabledHint": "Challenge timer has ended — profile shortcuts are disabled."
+  },
+  "profileDialog": {
+    "title": "Edit profile",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email"
+  },
+  "organizationDialog": {
+    "title": "Edit organization",
+    "name": "Organization name"
+  },
+  "legal": {
+    "privacyTitle": "Data privacy (demo text)",
+    "privacyBody": "This is placeholder copy for a frontend-only exercise. No personal data is sent to a server; profile and session values are stored in your browser's localStorage for demonstration purposes only.",
+    "imprintTitle": "Imprint (demo text)",
+    "imprintBody": "Demo supplier OS — mock UI only.\nResponsible entity: fictional.\nContact: use the profile email shown in the header after sign-in."
+  },
   "avatarMenu": {
+    "openMenu": "Account menu",
     "editProfile": "Edit Profile",
     "editOrganization": "Edit Organization",
     "dataPrivacy": "Data Privacy Statement",

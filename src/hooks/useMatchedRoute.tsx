@@ -53,6 +53,10 @@ const useMatchedRoute = (
     .filter(({ match }) => !!match && (matchOnSubPath ? true : match.isExact));
   const [firstResult] = results;
   const { match, route } = firstResult || {};
+  const resolvedRoute = route ?? routes[0];
+  if (!resolvedRoute) {
+    throw new Error("useMatchedRoute requires at least one route");
+  }
   const Fallback = fallbackComponent;
   const NotFound = notFoundComponent || (() => <>{t("common.notFound")}</>);
 
@@ -109,9 +113,11 @@ const useMatchedRoute = (
   }, [transition]);
 
   return {
-    route: route,
+    route: resolvedRoute,
     params:
-      match && validateParams(route.path, match.params) ? match.params : {},
+      match && validateParams(resolvedRoute.path, match.params)
+        ? match.params
+        : {},
     MatchedElement: (
       <Switch>
         {matchOnSubPath &&

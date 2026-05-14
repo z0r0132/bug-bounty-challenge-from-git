@@ -3,7 +3,8 @@
   "appTitle": "Supplier OS-Anwendung",
   "routes": {
     "/": "Start",
-    "/home": "Bug-Bounty-Herausforderung"
+    "/home": "Bug-Bounty-Herausforderung",
+    "/login": "Anmelden"
   },
   "accessDenied": {
     "title": "Zugriff verweigert",
@@ -11,14 +12,48 @@
   },
   "common": {
     "loading": "Wird geladen…",
-    "notFound": "Nicht gefunden"
+    "notFound": "Nicht gefunden",
+    "retry": "Erneut versuchen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "saved": "Lokal gespeichert (nur Demo)."
   },
   "language": {
     "en": "EN",
     "de": "DE",
     "ariaLabel": "Sprache der Oberfläche"
   },
+  "login": {
+    "title": "Anmelden",
+    "subtitle": "Mock-Authentifizierung: beliebige nicht leere E-Mail und Passwort. Daten bleiben nur in diesem Browser.",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "submit": "Weiter",
+    "errorEmpty": "Bitte E-Mail und Passwort eingeben."
+  },
+  "challenge": {
+    "ended": "Challenge beendet",
+    "menuDisabledHint": "Countdown beendet — Profil-Kürzel sind deaktiviert."
+  },
+  "profileDialog": {
+    "title": "Profil bearbeiten",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "email": "E-Mail"
+  },
+  "organizationDialog": {
+    "title": "Organisation bearbeiten",
+    "name": "Organisationsname"
+  },
+  "legal": {
+    "privacyTitle": "Datenschutz (Demotext)",
+    "privacyBody": "Platzhaltertext für eine rein frontend-basierte Übung. Es werden keine Daten an einen Server gesendet; Profil- und Sitzungswerte liegen nur zur Demonstration in localStorage Ihres Browsers.",
+    "imprintTitle": "Impressum (Demotext)",
+    "imprintBody": "Demo Supplier OS — nur Mock-UI.\nVerantwortliche Stelle: fiktiv.\nKontakt: E-Mail aus dem Profil in der Kopfzeile nach der Anmeldung."
+  },
   "avatarMenu": {
+    "openMenu": "Kontomenü",
     "editProfile": "Profil bearbeiten",
     "editOrganization": "Organisation bearbeiten",
     "dataPrivacy": "Datenschutzerklärung",

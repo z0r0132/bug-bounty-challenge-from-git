@@ -1,6 +1,7 @@
 export enum ERoute {
   ROOT = "/",
-  HOME = "/home"
+  HOME = "/home",
+  LOGIN = "/login"
 }
 
 export type TRoute = {
