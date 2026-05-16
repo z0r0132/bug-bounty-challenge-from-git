@@ -27,9 +27,13 @@ This app is intentionally **frontend-only** and **demo-oriented**. I kept implem
 - `npm run preview` — build, then serve production output on **http://localhost:2222** (`#/login` for sign-in).
 - `npm run lint` — ESLint (`react-app` config).
 
-### CodeSandbox
+### CodeSandbox / VS Code preview (port 2222)
 
-The default preview is wired in [`.codesandbox/tasks.json`](.codesandbox/tasks.json): the **`preview`** task runs at sandbox start and maps the browser panel to **port 2222**. Use the **Dev server** task if you want hot reload on port 3000 instead.
+- **[`.codesandbox/tasks.json`](.codesandbox/tasks.json)** — CodeSandbox VM default: **`preview`** runs `preview:serve` on **port 2222** at sandbox start (build runs in `setupTasks`).
+- **[`.vscode/tasks.json`](.vscode/tasks.json)** — VS Code / CodeSandbox editor: **`Preview (port 2222)`** is the default build task and runs on folder open; it builds, then serves on **2222**.
+- **[`.vscode/settings.json`](.vscode/settings.json)** — forwards **2222** and opens the browser when that port is detected.
+
+If the browser still shows port 3000, open **DevTools → Previews** and select the preview tagged **Preview (port 2222)** / port **2222**, or run task **Preview (port 2222)** from the command palette (`Tasks: Run Task`).
 
 ## Future improvements
 

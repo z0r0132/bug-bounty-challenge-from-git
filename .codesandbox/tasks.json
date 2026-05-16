@@ -1,21 +1,27 @@
 {
+  "$schema": "https://codesandbox.io/schemas/tasks.json",
   "setupTasks": [
     {
       "name": "Installing Dependencies",
       "command": "npm install"
+    },
+    {
+      "name": "Production build",
+      "command": "npm run build"
     }
   ],
   "tasks": {
     "preview": {
-      "name": "Preview (production build)",
-      "command": "npm run preview",
+      "name": "Preview (port 2222)",
+      "command": "npm run preview:serve",
       "runAtStart": true,
       "preview": {
-        "port": 2222
+        "port": 2222,
+        "prLink": "direct"
       }
     },
     "start": {
-      "name": "Dev server",
+      "name": "Dev server (port 3000)",
       "command": "npm run start",
       "preview": {
         "port": 3000
@@ -32,10 +38,6 @@
     "lint": {
       "name": "lint",
       "command": "npm run lint"
-    },
-    "eject": {
-      "name": "eject",
-      "command": "npm run eject"
     }
   }
 }
