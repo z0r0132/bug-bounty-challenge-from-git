@@ -1,4 +1,4 @@
-import type { User } from "../api/services/User/store";
+import type { StoredProfile, User } from "../types/user";
 import { STORAGE_KEYS } from "./constants";
 
 export const DEFAULT_MOCK_USER: User = {
@@ -7,7 +7,7 @@ export const DEFAULT_MOCK_USER: User = {
   eMail: "linda.bolt@osapiens.com"
 };
 
-export type StoredProfile = Partial<Pick<User, "firstName" | "lastName" | "eMail">>;
+export type { StoredProfile };
 
 export function readStoredProfile(): StoredProfile {
   try {
@@ -29,6 +29,9 @@ export function buildUserFromSession(sessionEmail: string): User {
   return {
     ...DEFAULT_MOCK_USER,
     ...profile,
-    eMail: profile.eMail?.trim() || sessionEmail.trim() || DEFAULT_MOCK_USER.eMail
+    eMail:
+      profile.eMail?.trim() ||
+      sessionEmail.trim() ||
+      DEFAULT_MOCK_USER.eMail
   };
 }

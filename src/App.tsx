@@ -25,7 +25,9 @@ const classes = {
   info: `${PREFIX}-info`
 };
 
-const CombinedStoreProvider: React.FC<{}> = ({ children }) => {
+const CombinedStoreProvider: React.FC<React.PropsWithChildren<{}>> = ({
+  children
+}) => {
   return <UserStoreProvider>{children}</UserStoreProvider>;
 };
 

@@ -1,11 +1,4 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import {
-  ActionError,
-  ActionResultStatus,
-  ActionSuccess,
-  ERoute
-} from "../../../types/global";
-import { resultOrError } from "../../../utils/global";
 import type { MockOrganization } from "../../../mock/organization";
 import {
   readStoredOrganization,
@@ -20,17 +13,12 @@ import {
 import {
   buildUserFromSession,
   readStoredProfile,
-  writeStoredProfile,
-  type StoredProfile
+  writeStoredProfile
 } from "../../../mock/user";
+import type { StoredProfile, User } from "../../../types/user";
+import { resultOrError } from "../../../utils/global";
 
-let getOwnUserInFlight = false;
-
-export interface User {
-  firstName?: string;
-  lastName?: string;
-  eMail?: string;
-}
+export type { User, StoredProfile };
 
 export default class UserStore {
   user: User | null = null;
@@ -38,6 +26,8 @@ export default class UserStore {
   sessionActive: boolean;
   userLoading = false;
   userLoadError: string | null = null;
+
+  private getOwnUserInFlight = false;
 
   constructor() {
     this.organization = readStoredOrganization();
@@ -72,7 +62,6 @@ export default class UserStore {
       this.userLoading = false;
       this.userLoadError = null;
     });
-    window.location.hash = `#${ERoute.LOGIN}`;
   }
 
   retryLoadUser(): void {
@@ -100,24 +89,16 @@ export default class UserStore {
     });
   }
 
-  async getOwnUser() {
-    if (getOwnUserInFlight) {
-      return {
-        status: ActionResultStatus.ERROR,
-        error: "Already loading",
-        knownErrors: {}
-      } as ActionError;
+  async getOwnUser(): Promise<void> {
+    if (this.getOwnUserInFlight) {
+      return;
     }
 
     if (!this.sessionActive) {
       runInAction(() => {
         this.userLoading = false;
       });
-      return {
-        status: ActionResultStatus.ERROR,
-        error: "No session",
-        knownErrors: {}
-      } as ActionError;
+      return;
     }
 
     const session = readSession();
@@ -126,14 +107,10 @@ export default class UserStore {
         this.userLoading = false;
         this.userLoadError = "Invalid session";
       });
-      return {
-        status: ActionResultStatus.ERROR,
-        error: "Invalid session",
-        knownErrors: {}
-      } as ActionError;
+      return;
     }
 
-    getOwnUserInFlight = true;
+    this.getOwnUserInFlight = true;
     runInAction(() => {
       this.userLoading = true;
       this.userLoadError = null;
@@ -147,15 +124,11 @@ export default class UserStore {
       );
       const [result, error] = settled as [User | null, unknown];
 
-      if (!!error) {
+      if (error != null) {
         runInAction(() => {
           this.userLoadError = "Could not load profile.";
         });
-        return {
-          status: ActionResultStatus.ERROR,
-          error,
-          knownErrors: {}
-        } as ActionError;
+        return;
       }
 
       if (result) {
@@ -163,23 +136,14 @@ export default class UserStore {
           this.user = result;
           this.organization = readStoredOrganization();
         });
-
-        return {
-          status: ActionResultStatus.SUCCESS,
-          result: result
-        } as ActionSuccess<User>;
+        return;
       }
 
       runInAction(() => {
         this.userLoadError = "Something went wrong.";
       });
-      return {
-        status: ActionResultStatus.ERROR,
-        error: "Something went wrong.",
-        knownErrors: {}
-      } as ActionError;
     } finally {
-      getOwnUserInFlight = false;
+      this.getOwnUserInFlight = false;
       runInAction(() => {
         this.userLoading = false;
       });

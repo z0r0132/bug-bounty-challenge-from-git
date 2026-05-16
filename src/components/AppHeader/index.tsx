@@ -11,7 +11,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import { styled, useTheme } from "@mui/material/styles";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { User } from "../../api/services/User/store";
+import type { User } from "../../types/user";
 import { useChallengeCountdown } from "../../hooks/useChallengeCountdown";
 import { CHALLENGE_DURATION_SECONDS } from "../../mock/constants";
 import AvatarMenu from "../AvatarMenu";
@@ -52,7 +52,7 @@ const AppHeader = React.forwardRef<HTMLDivElement, AppHeaderProps>(
 
     return (
       <AppBar ref={ref} position="fixed" sx={{ width: "100vw" }}>
-        <Toolbar sx={{ background: "#08140C 0% 0% no-repeat padding-box" }}>
+        <Toolbar sx={{ bgcolor: "common.black" }}>
           <Box sx={{ width: "100%", flexDirection: "row", display: "flex" }}>
             <Box
               sx={{

@@ -21,9 +21,8 @@ import {
   useLocation
 } from "react-router-dom";
 import { TRoute, ERoute } from "../../types/global";
-import AccessDenied from "../AccessDenied";
 import LoginPage from "../Login";
-import { routes as useRoutes } from "../routes";
+import { routes as appRoutes } from "../routes";
 
 const hideSplashScreen = () => {
   const splashscreen = document.getElementById("app-splashscreen");
@@ -43,7 +42,7 @@ const MainLayout = observer(() => {
   const theme = useTheme();
   const location = useLocation();
   const history = useHistory();
-  const routes: TRoute[] = [...useRoutes];
+  const routes: TRoute[] = [...appRoutes];
   const [fallbackRoute] = routes;
   const Fallback = fallbackRoute.Component;
   const { route = fallbackRoute, MatchedElement } = useMatchedRoute(
@@ -62,9 +61,6 @@ const MainLayout = observer(() => {
     pageTitle = t(`routes./${groupName}`);
   }
 
-  const loadingApp = false;
-  const accessDenied = false;
-
   useEffect(() => {
     if (location.pathname === ERoute.ROOT) {
       history.replace(ERoute.HOME);
@@ -73,13 +69,9 @@ const MainLayout = observer(() => {
 
   useEffect(() => {
     if (!user && !userLoadError) {
-      userStore.getOwnUser();
+      void userStore.getOwnUser();
     }
   }, [user, userLoadError, userStore]);
-
-  if (accessDenied) {
-    return <AccessDenied />;
-  }
 
   if (location.pathname === ERoute.ROOT) {
     return (
@@ -95,6 +87,7 @@ const MainLayout = observer(() => {
   }
 
   const showUserError = !userLoading && !!userLoadError && !user;
+  const showMainContent = Boolean(user);
 
   return (
     <div
@@ -107,17 +100,6 @@ const MainLayout = observer(() => {
         height: "100vh"
       }}
     >
-      {loadingApp && (
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          width="100%"
-          height="100%"
-        >
-          <CircularProgress color="primary" size={100} />
-        </Box>
-      )}
       <Box
         sx={{
           display: "flex",
@@ -126,14 +108,16 @@ const MainLayout = observer(() => {
           background: "#f5f5f5"
         }}
       >
-        <Slide direction="down" in={!loadingApp} mountOnEnter>
-          <AppHeader user={user ?? {}} pageTitle={pageTitle} />
-        </Slide>
+        {showMainContent && (
+          <Slide direction="down" in mountOnEnter>
+            <AppHeader user={user!} pageTitle={pageTitle} />
+          </Slide>
+        )}
         {userLoading && (
           <LinearProgress
             sx={{
               position: "fixed",
-              top: theme.tokens.header.height,
+              top: showMainContent ? theme.tokens.header.height : 0,
               left: 0,
               width: "100%",
               zIndex: theme.zIndex.appBar
@@ -145,10 +129,11 @@ const MainLayout = observer(() => {
           component="main"
           sx={{
             position: "relative",
-            height: `calc(100% - ${theme.tokens.header.height})`,
+            height: showMainContent
+              ? `calc(100% - ${theme.tokens.header.height})`
+              : "100%",
             width: "100%",
-            marginTop:
-              theme.tokens.header.height /* Necessary because of AppBar */
+            marginTop: showMainContent ? theme.tokens.header.height : 0
           }}
         >
           {showUserError && (
@@ -164,7 +149,7 @@ const MainLayout = observer(() => {
               </Button>
             </Box>
           )}
-          {!showUserError && user && MatchedElement}
+          {showMainContent && !showUserError && MatchedElement}
           {!showUserError && !user && userLoading && (
             <Box
               display="flex"

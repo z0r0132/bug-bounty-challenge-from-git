@@ -4,12 +4,7 @@ import {
   Avatar,
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Divider,
-  TextField,
   Tooltip,
   Typography
 } from "@mui/material";
@@ -19,42 +14,26 @@ import { useTheme } from "@mui/material/styles";
 import { observer } from "mobx-react";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import { useUserStore } from "../../api/services/User";
-import { User } from "../../api/services/User/store";
 import { DEFAULT_ORGANIZATION } from "../../mock/organization";
+import { ERoute } from "../../types/global";
+import type { User } from "../../types/user";
+import { stringAvatar } from "./avatarUtils";
+import LegalDialog, { LegalDialogVariant } from "./LegalDialog";
+import OrganizationDialog from "./OrganizationDialog";
+import ProfileDialog from "./ProfileDialog";
 
 interface AvatarMenuProps {
   user: User;
   challengeEnded?: boolean;
 }
 
-const getInitials = (user: User) => {
-  if (user.firstName || user.lastName) {
-    const initials = [user.firstName, user.lastName]
-      .map((n) => (n?.[0] ? n[0].toLocaleUpperCase() : ""))
-      .join("");
-    return initials;
-  }
-  return "";
-};
-
-const stringAvatar = (user: User) => {
-  const initials = getInitials(user);
-  const r = Math.floor(parseInt(initials[0] ? initials[0] : "k", 36) * 7);
-  const g = Math.floor(parseInt(initials[1] ? initials[1] : "l", 36) * 7);
-  const b = Math.floor(
-    parseInt(user?.firstName?.[1] ? user.firstName[1] : "m", 36) * 7
-  );
-  return {
-    sx: { bgcolor: `rgb(${r},${g},${b})`, cursor: "pointer" },
-    children: initials
-  };
-};
-
 const AvatarMenu = observer((props: AvatarMenuProps) => {
   const { user, challengeEnded = false } = props;
   const userStore = useUserStore();
+  const history = useHistory();
   const theme = useTheme();
   const { t } = useTranslation("app");
   const { enqueueSnackbar } = useSnackbar();
@@ -63,13 +42,7 @@ const AvatarMenu = observer((props: AvatarMenuProps) => {
 
   const [profileOpen, setProfileOpen] = useState(false);
   const [orgOpen, setOrgOpen] = useState(false);
-  const [privacyOpen, setPrivacyOpen] = useState(false);
-  const [imprintOpen, setImprintOpen] = useState(false);
-
-  const [firstName, setFirstName] = useState(user.firstName ?? "");
-  const [lastName, setLastName] = useState(user.lastName ?? "");
-  const [eMail, setEMail] = useState(user.eMail ?? "");
-  const [orgName, setOrgName] = useState(userStore.organization.name);
+  const [legalOpen, setLegalOpen] = useState<LegalDialogVariant | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     if (challengeEnded) return;
@@ -80,36 +53,23 @@ const AvatarMenu = observer((props: AvatarMenuProps) => {
     setAnchorEl(null);
   };
 
-  const openProfile = () => {
+  const handleLogout = () => {
     handleClose();
-    setFirstName(user.firstName ?? "");
-    setLastName(user.lastName ?? "");
-    setEMail(user.eMail ?? "");
-    setProfileOpen(true);
+    userStore.logout();
+    history.replace(ERoute.LOGIN);
   };
 
-  const openOrg = () => {
-    handleClose();
-    setOrgName(userStore.organization.name);
-    setOrgOpen(true);
-  };
-
-  const saveProfile = () => {
-    userStore.updateProfile({ firstName, lastName, eMail });
+  const saveProfile = (profile: Pick<User, "firstName" | "lastName" | "eMail">) => {
+    userStore.updateProfile(profile);
     setProfileOpen(false);
     enqueueSnackbar(t("common.saved"), { variant: "success" });
   };
 
-  const saveOrg = () => {
-    const name = orgName.trim() || DEFAULT_ORGANIZATION.name;
-    userStore.updateOrganization({ name });
+  const saveOrg = (name: string) => {
+    const trimmed = name.trim() || DEFAULT_ORGANIZATION.name;
+    userStore.updateOrganization({ name: trimmed });
     setOrgOpen(false);
     enqueueSnackbar(t("common.saved"), { variant: "success" });
-  };
-
-  const handleLogout = () => {
-    handleClose();
-    userStore.logout();
   };
 
   const avatarProps = stringAvatar(user);
@@ -164,7 +124,10 @@ const AvatarMenu = observer((props: AvatarMenuProps) => {
             color="primary"
             size="medium"
             disabled={challengeEnded}
-            onClick={openProfile}
+            onClick={() => {
+              handleClose();
+              setProfileOpen(true);
+            }}
           >
             {t("avatarMenu.editProfile")}
           </Button>
@@ -175,14 +138,17 @@ const AvatarMenu = observer((props: AvatarMenuProps) => {
           flexDirection="row"
           alignItems="center"
           justifyContent="center"
-          style={{ color: theme.palette.grey[500] }}
+          sx={{ color: theme.palette.grey[500] }}
         >
           <Button
             color="inherit"
             variant="text"
             size="small"
             disabled={challengeEnded}
-            onClick={openOrg}
+            onClick={() => {
+              handleClose();
+              setOrgOpen(true);
+            }}
           >
             <Icon path={mdiTag} size={0.75} />
             <Box m={0.5} />
@@ -206,9 +172,9 @@ const AvatarMenu = observer((props: AvatarMenuProps) => {
             size="small"
             onClick={() => {
               handleClose();
-              setPrivacyOpen(true);
+              setLegalOpen("privacy");
             }}
-            style={{
+            sx={{
               color: indigo[500],
               textTransform: "none"
             }}
@@ -220,9 +186,9 @@ const AvatarMenu = observer((props: AvatarMenuProps) => {
             size="small"
             onClick={() => {
               handleClose();
-              setImprintOpen(true);
+              setLegalOpen("imprint");
             }}
-            style={{
+            sx={{
               color: indigo[500],
               textTransform: "none"
             }}
@@ -232,82 +198,25 @@ const AvatarMenu = observer((props: AvatarMenuProps) => {
         </Box>
       </Menu>
 
-      <Dialog open={profileOpen} onClose={() => setProfileOpen(false)} fullWidth maxWidth="sm">
-        <DialogTitle>{t("profileDialog.title")}</DialogTitle>
-        <DialogContent>
-          <TextField
-            margin="dense"
-            label={t("profileDialog.firstName")}
-            fullWidth
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            label={t("profileDialog.lastName")}
-            fullWidth
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            label={t("profileDialog.email")}
-            fullWidth
-            type="email"
-            value={eMail}
-            onChange={(e) => setEMail(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setProfileOpen(false)}>{t("common.cancel")}</Button>
-          <Button onClick={saveProfile} variant="contained" color="primary">
-            {t("common.save")}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog open={orgOpen} onClose={() => setOrgOpen(false)} fullWidth maxWidth="sm">
-        <DialogTitle>{t("organizationDialog.title")}</DialogTitle>
-        <DialogContent>
-          <TextField
-            margin="dense"
-            label={t("organizationDialog.name")}
-            fullWidth
-            value={orgName}
-            onChange={(e) => setOrgName(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOrgOpen(false)}>{t("common.cancel")}</Button>
-          <Button onClick={saveOrg} variant="contained" color="primary">
-            {t("common.save")}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog open={privacyOpen} onClose={() => setPrivacyOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{t("legal.privacyTitle")}</DialogTitle>
-        <DialogContent>
-          <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
-            {t("legal.privacyBody")}
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setPrivacyOpen(false)}>{t("common.close")}</Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog open={imprintOpen} onClose={() => setImprintOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{t("legal.imprintTitle")}</DialogTitle>
-        <DialogContent>
-          <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
-            {t("legal.imprintBody")}
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setImprintOpen(false)}>{t("common.close")}</Button>
-        </DialogActions>
-      </Dialog>
+      <ProfileDialog
+        open={profileOpen}
+        user={user}
+        onClose={() => setProfileOpen(false)}
+        onSave={saveProfile}
+      />
+      <OrganizationDialog
+        open={orgOpen}
+        organizationName={userStore.organization.name}
+        onClose={() => setOrgOpen(false)}
+        onSave={saveOrg}
+      />
+      {legalOpen && (
+        <LegalDialog
+          open
+          variant={legalOpen}
+          onClose={() => setLegalOpen(null)}
+        />
+      )}
     </div>
   );
 });
