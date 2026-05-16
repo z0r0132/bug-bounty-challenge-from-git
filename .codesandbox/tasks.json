@@ -12,11 +12,11 @@
   ],
   "tasks": {
     "preview": {
-      "name": "Preview (port 2222)",
+      "name": "Preview",
       "command": "npm run preview:serve",
       "runAtStart": true,
       "preview": {
-        "port": 2222,
+        "port": 3333,
         "prLink": "direct"
       }
     },
