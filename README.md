@@ -24,7 +24,12 @@ This app is intentionally **frontend-only** and **demo-oriented**. I kept implem
 
 - `npm start` — dev server (uses `NODE_OPTIONS=--openssl-legacy-provider` with webpack 4 on newer Node).
 - `npm run build` — production bundle.
+- `npm run preview` — build, then serve production output on **http://localhost:2222** (`#/login` for sign-in).
 - `npm run lint` — ESLint (`react-app` config).
+
+### CodeSandbox
+
+The default preview is wired in [`.codesandbox/tasks.json`](.codesandbox/tasks.json): the **`preview`** task runs at sandbox start and maps the browser panel to **port 2222**. Use the **Dev server** task if you want hot reload on port 3000 instead.
 
 ## Future improvements
 
